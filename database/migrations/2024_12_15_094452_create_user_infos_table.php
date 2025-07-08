@@ -41,8 +41,7 @@ return new class extends Migration
 
         Schema::table('user_infos', function (Blueprint $table) {
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('pre_country')->references('id')->on('country_infos')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('per_country')->references('id')->on('country_infos')->onDelete('cascade')->onUpdate('cascade');
+
         });
     }
 

@@ -18,7 +18,7 @@ class AdminTableSeeder extends Seeder
     {
         $adminUser = [
             'uid' => Str::uuid(),
-            'name' => 'Admin User',
+
             'mobile' => '01771882876',
             'ccode' => '+1',
             'email' => 'admin@orangebd.com',

@@ -14,7 +14,21 @@ use App\Repositories\Admin\RolePermissionRepository;
 use App\Repositories\Admin\RoleRepository;
 use App\Repositories\Admin\TreeEntityRepository;
 use App\Repositories\Admin\UserRepository;
+
+
+
+
 use Illuminate\Support\ServiceProvider;
+use App\Interfaces\Admin\PetRepositoryInterface;
+use App\Repositories\Admin\PetRepository;
+use App\Interfaces\Admin\OrganizationRepositoryInterface;
+use App\Repositories\Admin\OrganizationRepository;
+use App\Interfaces\Admin\GroomerProfileRepositoryInterface;
+use App\Repositories\Admin\GroomerProfileRepository;
+use App\Interfaces\Admin\ServiceRepositoryInterface;
+use App\Repositories\Admin\ServiceRepository;
+use App\Interfaces\Admin\AppointmentRepositoryInterface;
+use App\Repositories\Admin\AppointmentRepository;
 
 
 class AdminRepositoryServiceProvider extends ServiceProvider
@@ -31,6 +45,13 @@ class AdminRepositoryServiceProvider extends ServiceProvider
         $this->app->bind(RolePermissionRepositoryInterface::class, RolePermissionRepository::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         // Event Management Bindings
+
+
+         $this->app->bind(PetRepositoryInterface::class, PetRepository::class);
+        $this->app->bind(OrganizationRepositoryInterface::class, OrganizationRepository::class);
+        $this->app->bind(GroomerProfileRepositoryInterface::class, GroomerProfileRepository::class);
+        $this->app->bind(ServiceRepositoryInterface::class, ServiceRepository::class);
+        $this->app->bind(AppointmentRepositoryInterface::class, AppointmentRepository::class);
     }
 
     /**

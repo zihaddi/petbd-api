@@ -3,50 +3,18 @@
 use App\Enums\TokenAbility;
 use App\Http\Controllers\Api\Admin\AuthClientController;
 use App\Http\Controllers\Api\Admin\AuthController;
-use App\Http\Controllers\Api\Admin\BrandController;
-use App\Http\Controllers\Api\Admin\ComplianceController;
-use App\Http\Controllers\Api\Admin\ContactController;
-use App\Http\Controllers\Api\Admin\CountryInfoController;
-use App\Http\Controllers\Api\Admin\CurrencyController;
-use App\Http\Controllers\Api\Admin\CustomerReviewController;
-use App\Http\Controllers\Api\Admin\EmailTemplateController;
-use App\Http\Controllers\Api\Admin\EventCategoryController;
-use App\Http\Controllers\Api\Admin\EventController;
-use App\Http\Controllers\Api\Admin\FaqCategoryController;
-use App\Http\Controllers\Api\Admin\FaqController;
-use App\Http\Controllers\Api\Admin\GenderController;
-use App\Http\Controllers\Api\Admin\LanguageController;
-use App\Http\Controllers\Api\Admin\MetaController;
-use App\Http\Controllers\Api\Admin\NewsCategoryController;
-use App\Http\Controllers\Api\Admin\NewsController;
-use App\Http\Controllers\Api\Admin\PageController;
-use App\Http\Controllers\Api\Admin\PaymentGatewayController;
-use App\Http\Controllers\Api\Admin\PlanController;
-use App\Http\Controllers\Api\Admin\PortfolioCategoryController;
-use App\Http\Controllers\Api\Admin\PortfolioController;
-use App\Http\Controllers\Api\Admin\ReleaseNoteController;
 use App\Http\Controllers\Api\Admin\RoleController;
 use App\Http\Controllers\Api\Admin\RolePermissionController;
-use App\Http\Controllers\Api\Admin\SmsTemplateController;
-use App\Http\Controllers\Api\Admin\SocialLinkController;
-use App\Http\Controllers\Api\Admin\SubscribeController;
-use App\Http\Controllers\Api\Admin\TagController;
-use App\Http\Controllers\Api\Admin\TeamMemberController;
 use App\Http\Controllers\Api\Admin\TreeEntityController;
-use App\Http\Controllers\Api\Admin\TrustedBrandController;
-use App\Http\Controllers\Api\Admin\TutorialCategoryController;
-use App\Http\Controllers\Api\Admin\TutorialController;
 use App\Http\Controllers\Api\Admin\UserController;
-use App\Http\Controllers\Api\Admin\PartnerController;
-use App\Http\Controllers\Api\Admin\FeatureController;
-use App\Http\Controllers\Api\Admin\YearController;
-use App\Http\Controllers\Api\Admin\DynamicHeaderController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use PharIo\Manifest\Email;
-use App\Http\Controllers\Api\Admin\TvChannelController;
-use App\Http\Controllers\Api\Admin\TvProgramController;
-use App\Http\Controllers\Api\Admin\MediaContentController;
+
+use App\Http\Controllers\Api\Admin\PetController;
+use App\Http\Controllers\Api\Admin\OrganizationController;
+use App\Http\Controllers\Api\Admin\GroomerProfileController;
+use App\Http\Controllers\Api\Admin\ServiceController;
+use App\Http\Controllers\Api\Admin\AppointmentController;
+
 
 //Auth
 Route::controller(AuthController::class)->group(function () {
@@ -113,4 +81,64 @@ Route::middleware(['auth:sanctum', 'ability:' . TokenAbility::ACCESS_API->value]
         Route::post('users/all', 'index')->name('users.all');
         Route::post('users/restore/{id}', 'restore')->name('users.restore');
     });
+
+
+     // Pet Management Routes
+        Route::prefix('pets')->group(function () {
+            Route::get('/', [PetController::class, 'index']);
+            Route::post('/', [PetController::class, 'store']);
+            Route::get('/{id}', [PetController::class, 'show']);
+            Route::put('/{id}', [PetController::class, 'update']);
+            Route::delete('/{id}', [PetController::class, 'destroy']);
+            Route::get('/owner/{ownerId}', [PetController::class, 'getByOwner']);
+            Route::get('/categories/list', [PetController::class, 'getPetCategories']);
+            Route::get('/subcategories/list', [PetController::class, 'getPetSubcategories']);
+            Route::get('/breeds/list', [PetController::class, 'getPetBreeds']);
+        });
+
+        // Organization Management Routes
+        Route::prefix('organizations')->group(function () {
+            Route::get('/', [OrganizationController::class, 'index']);
+            Route::post('/', [OrganizationController::class, 'store']);
+            Route::get('/{id}', [OrganizationController::class, 'show']);
+            Route::put('/{id}', [OrganizationController::class, 'update']);
+            Route::delete('/{id}', [OrganizationController::class, 'destroy']);
+            Route::get('/active/list', [OrganizationController::class, 'getActive']);
+        });
+
+        // Groomer Profile Management Routes
+        Route::prefix('groomer-profiles')->group(function () {
+            Route::get('/', [GroomerProfileController::class, 'index']);
+            Route::post('/', [GroomerProfileController::class, 'store']);
+            Route::get('/{id}', [GroomerProfileController::class, 'show']);
+            Route::put('/{id}', [GroomerProfileController::class, 'update']);
+            Route::delete('/{id}', [GroomerProfileController::class, 'destroy']);
+            Route::get('/organization/{organizationId}', [GroomerProfileController::class, 'getByOrganization']);
+            Route::get('/user/{userId}', [GroomerProfileController::class, 'getByUser']);
+        });
+
+        // Service Management Routes
+        Route::prefix('services')->group(function () {
+            Route::get('/', [ServiceController::class, 'index']);
+            Route::post('/', [ServiceController::class, 'store']);
+            Route::get('/{id}', [ServiceController::class, 'show']);
+            Route::put('/{id}', [ServiceController::class, 'update']);
+            Route::delete('/{id}', [ServiceController::class, 'destroy']);
+            Route::get('/organization/{organizationId}', [ServiceController::class, 'getByOrganization']);
+            Route::get('/{serviceId}/pricing', [ServiceController::class, 'getServicePricing']);
+            Route::put('/{serviceId}/pricing', [ServiceController::class, 'updateServicePricing']);
+        });
+
+        // Appointment Management Routes
+        Route::prefix('appointments')->group(function () {
+            Route::get('/', [AppointmentController::class, 'index']);
+            Route::post('/', [AppointmentController::class, 'store']);
+            Route::get('/{id}', [AppointmentController::class, 'show']);
+            Route::put('/{id}', [AppointmentController::class, 'update']);
+            Route::delete('/{id}', [AppointmentController::class, 'destroy']);
+            Route::patch('/{id}/status', [AppointmentController::class, 'updateStatus']);
+            Route::get('/pet/{petId}', [AppointmentController::class, 'getByPet']);
+            Route::get('/groomer/{groomerId}', [AppointmentController::class, 'getByGroomer']);
+            Route::get('/dashboard/stats', [AppointmentController::class, 'getDashboardStats']);
+        });
 });

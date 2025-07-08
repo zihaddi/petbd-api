@@ -17,7 +17,7 @@ class AdminMenuSeeder extends Seeder
     public function run()
     {
         // Clear existing menu data to prevent duplicates
-        DB::table('dynamic_headers')->truncate();
+        DB::table('tree_entities')->truncate();
 
         $now = Carbon::now();
 $created_by = 1; // Or use Auth::id() in an authenticated context
@@ -117,13 +117,13 @@ $parentMenus = [
     ],
 ];
 
-DB::table('dynamic_headers')->insert($parentMenus);
+DB::table('tree_entities')->insert($parentMenus);
 
 // Get inserted parent menu IDs
-$aboutId = DB::table('dynamic_headers')->where('node_name', 'About')->value('id');
-$servicesId = DB::table('dynamic_headers')->where('node_name', 'Services')->value('id');
-$careerId = DB::table('dynamic_headers')->where('node_name', 'Get Involve')->value('id');
-$resourcesId = DB::table('dynamic_headers')->where('node_name', 'Resources')->value('id');
+$aboutId = DB::table('tree_entities')->where('node_name', 'About')->value('id');
+$servicesId = DB::table('tree_entities')->where('node_name', 'Services')->value('id');
+$careerId = DB::table('tree_entities')->where('node_name', 'Get Involve')->value('id');
+$resourcesId = DB::table('tree_entities')->where('node_name', 'Resources')->value('id');
 
 // Child Menus
 $childMenus = [
@@ -158,7 +158,7 @@ $childMenus = [
     ['pid' => $careerId, 'node_name' => 'Donorship', 'route_name' => 'donorship', 'route_location' => '/career/donorship', 'icon' => null, 'status' => true, 'serials' => 8, 'created_by' => $created_by, 'modified_by' => null, 'created_at' => $now, 'updated_at' => $now],
 ];
 
-    DB::table('dynamic_headers')->insert($childMenus);
+    DB::table('tree_entities')->insert($childMenus);
 
 
         $this->command->info('Admin menu seeded successfully!');
