@@ -16,27 +16,27 @@ class PetRepository implements PetRepositoryInterface
     public function index($request)
     {
         try {
-            $query = Pet::with(['owner', 'category', 'subcategory', 'breed'])
-                ->filter($request->all());
+        $query = Pet::with(['owner', 'category', 'subcategory', 'breed'])
+            ->filter($request->all());
 
-            if ($request->has('per_page')) {
-                $pets = $query->paginate($request->per_page);
-            } else {
-                $pets = $query->get();
-            }
-
-            return [
-                'status' => true,
-                'message' => 'Pets retrieved successfully',
-                'data' => $pets
-            ];
-        } catch (\Exception $e) {
-            return [
-                'status' => false,
-                'message' => 'Error retrieving pets: ' . $e->getMessage(),
-                'data' => null
-            ];
+        if ($request->has('per_page')) {
+            $pets = $query->paginate($request->per_page);
+        } else {
+            $pets = $query->get();
         }
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Pets retrieved successfully',
+            'data' => $pets
+        ], 200); // 200 is the HTTP status code for success
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Error retrieving pets: ' . $e->getMessage(),
+            'data' => null
+        ], 500); // 500 for server error
+    }
     }
 
     public function store($request)
@@ -63,18 +63,18 @@ class PetRepository implements PetRepositoryInterface
             $pet = Pet::create($petData);
 
             DB::commit();
-            return [
+            return response()->json( [
                 'status' => true,
                 'message' => 'Pet created successfully',
                 'data' => $pet->load(['owner', 'category', 'subcategory', 'breed'])
-            ];
+            ]);
         } catch (\Exception $e) {
             DB::rollBack();
-            return [
+            return response()->json([
                 'status' => false,
                 'message' => 'Error creating pet: ' . $e->getMessage(),
                 'data' => null
-            ];
+            ]);
         }
     }
 
@@ -84,17 +84,17 @@ class PetRepository implements PetRepositoryInterface
             $pet = Pet::with(['owner', 'category', 'subcategory', 'breed', 'appointments.groomerProfile.user', 'appointments.service'])
                 ->findOrFail($id);
 
-            return [
+            return response()->json([
                 'status' => true,
                 'message' => 'Pet retrieved successfully',
                 'data' => $pet
-            ];
+            ]);
         } catch (\Exception $e) {
-            return [
+            return response()->json([
                 'status' => false,
                 'message' => 'Error retrieving pet: ' . $e->getMessage(),
                 'data' => null
-            ];
+            ]);
         }
     }
 
@@ -124,18 +124,18 @@ class PetRepository implements PetRepositoryInterface
             $pet->update($petData);
 
             DB::commit();
-            return [
+            return response()->json( [
                 'status' => true,
                 'message' => 'Pet updated successfully',
                 'data' => $pet->load(['owner', 'category', 'subcategory', 'breed'])
-            ];
+            ]);
         } catch (\Exception $e) {
             DB::rollBack();
-            return [
+            return response()->json( [
                 'status' => false,
                 'message' => 'Error updating pet: ' . $e->getMessage(),
                 'data' => null
-            ];
+            ]);
         }
     }
 
@@ -147,18 +147,18 @@ class PetRepository implements PetRepositoryInterface
             $pet->delete();
 
             DB::commit();
-            return [
+            return response()->json( [
                 'status' => true,
                 'message' => 'Pet deleted successfully',
                 'data' => null
-            ];
+            ]);
         } catch (\Exception $e) {
             DB::rollBack();
-            return [
+            return response()->json( [
                 'status' => false,
                 'message' => 'Error deleting pet: ' . $e->getMessage(),
                 'data' => null
-            ];
+            ]);
         }
     }
 
@@ -170,17 +170,17 @@ class PetRepository implements PetRepositoryInterface
                 ->where('status', true)
                 ->get();
 
-            return [
+            return response()->json( [
                 'status' => true,
                 'message' => 'Owner pets retrieved successfully',
                 'data' => $pets
-            ];
+            ]);
         } catch (\Exception $e) {
-            return [
+            return response()->json( [
                 'status' => false,
                 'message' => 'Error retrieving owner pets: ' . $e->getMessage(),
                 'data' => null
-            ];
+            ]);
         }
     }
 
@@ -188,17 +188,17 @@ class PetRepository implements PetRepositoryInterface
     {
         try {
             $categories = PetCategory::active()->get();
-            return [
+            return response()->json( [
                 'status' => true,
                 'message' => 'Pet categories retrieved successfully',
                 'data' => $categories
-            ];
+            ]);
         } catch (\Exception $e) {
-            return [
+            return response()->json([
                 'status' => false,
                 'message' => 'Error retrieving pet categories: ' . $e->getMessage(),
                 'data' => null
-            ];
+            ]);
         }
     }
 
@@ -213,17 +213,17 @@ class PetRepository implements PetRepositoryInterface
 
             $subcategories = $query->get();
 
-            return [
+            return response()->json([
                 'status' => true,
                 'message' => 'Pet subcategories retrieved successfully',
                 'data' => $subcategories
-            ];
+            ]);
         } catch (\Exception $e) {
-            return [
+            return response()->json([
                 'status' => false,
                 'message' => 'Error retrieving pet subcategories: ' . $e->getMessage(),
                 'data' => null
-            ];
+            ]);
         }
     }
 
@@ -238,17 +238,17 @@ class PetRepository implements PetRepositoryInterface
 
             $breeds = $query->get();
 
-            return [
+            return response()->json([
                 'status' => true,
                 'message' => 'Pet breeds retrieved successfully',
                 'data' => $breeds
-            ];
+            ]);
         } catch (\Exception $e) {
-            return [
+            return response()->json([
                 'status' => false,
                 'message' => 'Error retrieving pet breeds: ' . $e->getMessage(),
                 'data' => null
-            ];
+            ]);
         }
     }
 }

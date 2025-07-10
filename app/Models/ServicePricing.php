@@ -55,15 +55,38 @@ class ServicePricing extends Model
         return $query->where('status', true);
     }
 
+    public function scopeByLocationtype($query, $locationType)
+    {
+        return $query->where('location_type', $locationType);
+    }
+
+    public function scopeByService($query, $serviceId)
+    {
+        return $query->where('service_id', $serviceId);
+    }
+
     public function scopeFilter($query, array $filters)
     {
+        $query->when($filters['search'] ?? null, function ($query, $search) {
+            $query->whereHas('service', function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('description', 'like', '%' . $search . '%');
+            });
+        });
+
+        $query->when($filters['location_type'] ?? null, function ($query, $locationType) {
+            $query->where('location_type', $locationType);
+        });
+
+        $query->when($filters['status'] ?? null, function ($query, $status) {
+            $query->where('status', $status);
+        });
+
         $query->when($filters['service_id'] ?? null, function ($query, $serviceId) {
             $query->where('service_id', $serviceId);
-        })->when($filters['location_type'] ?? null, function ($query, $locationType) {
-            $query->where('location_type', $locationType);
-        })->when(isset($filters['status']) && $filters['status'] !== null, function ($query) use ($filters) {
-            $query->where('status', '=', $filters['status']);
         });
+
+        return $query;
     }
 
     protected static function boot()

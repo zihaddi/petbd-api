@@ -54,15 +54,9 @@ class UserInfo extends Model
         return $value ? url(Storage::url($value)) : null;
     }
 
-    public function genderInfo()
-    {
-        return $this->belongsTo(Gender::class, 'gender', 'id');
-    }
 
-    public function nationalityInfo()
-    {
-        return $this->belongsTo(CountryInfo::class, 'nationality_id', 'id');
-    }
+
+
     protected static function boot()
     {
 

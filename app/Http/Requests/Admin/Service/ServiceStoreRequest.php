@@ -21,7 +21,7 @@ class ServiceStoreRequest extends FormRequest
             'estimated_duration' => 'required|integer|min:15|max:480',
             'category' => 'required|in:grooming,bathing,nail_care,dental,specialty,other',
             'requires_pet_categories' => 'nullable|array',
-            'requires_pet_categories.*' => 'integer|exists:pet_categories,category_id',
+            'requires_pet_categories.*' => 'integer|exists:pet_categories,id',
             'status' => 'boolean',
             'pricing' => 'nullable|array',
             'pricing.*.location_type' => 'required_with:pricing|in:in_house,at_organization',

@@ -13,6 +13,7 @@ class AppointmentRepository implements AppointmentRepositoryInterface
 {
     public function index($request)
     {
+
         try {
             $query = Appointment::with([
                 'pet.owner',

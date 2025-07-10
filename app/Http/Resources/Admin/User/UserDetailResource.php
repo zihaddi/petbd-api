@@ -38,7 +38,7 @@ class UserDetailResource extends JsonResource
             "per_provience" => $this->per_provience,
             "per_zip" => $this->per_zip,
             "nationalityInfo" => $this->nationalityInfo,
-            "genderInfo" => $this->genderInfo,
+
 
         ];
     }

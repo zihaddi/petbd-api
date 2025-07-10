@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Appointment\AppointmentStoreRequest;
 use App\Http\Requests\Admin\Appointment\AppointmentUpdateRequest;
 use App\Interfaces\Admin\AppointmentRepositoryInterface;
-use App\Models\Appointment;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
@@ -24,42 +23,42 @@ class AppointmentController extends Controller
         return $this->client->index($request);
     }
 
-    public function store( AppointmentStoreRequest $request): JsonResponse
+    public function store(AppointmentStoreRequest $request): JsonResponse
     {
         return $this->client->store($request);
     }
 
-    public function show( $id): JsonResponse
+    public function show($id): JsonResponse
     {
         return $this->client->show($id);
     }
 
-    public function update( $id, AppointmentUpdateRequest $request): JsonResponse
+    public function update($id, AppointmentUpdateRequest $request): JsonResponse
     {
         return $this->client->update($id, $request);
     }
 
-    public function destroy( $id): JsonResponse
+    public function destroy($id): JsonResponse
     {
         return $this->client->destroy($id);
     }
 
-    public function updateStatus( $id, Request $request): JsonResponse
+    public function updateStatus($id, Request $request): JsonResponse
     {
         return $this->client->updateStatus($id, $request);
     }
 
-    public function getByPet( $petId): JsonResponse
+    public function getByPet($petId): JsonResponse
     {
         return $this->client->getByPet($petId);
     }
 
-    public function getByGroomer( $groomerId): JsonResponse
+    public function getByGroomer($groomerId): JsonResponse
     {
         return $this->client->getByGroomer($groomerId);
     }
 
-    public function getDashboardStats( Request $request): JsonResponse
+    public function getDashboardStats(Request $request): JsonResponse
     {
         return $this->client->getDashboardStats($request);
     }

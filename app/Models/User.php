@@ -74,7 +74,7 @@ class User extends Authenticatable
 
     public function UserInfo()
     {
-        return $this->hasOne(UserInfo::class, 'user_id')->with('genderInfo:id,gender_name', 'nationalityInfo:id,nationality');
+        return $this->hasOne(UserInfo::class, 'user_id');
     }
 
     public function role()

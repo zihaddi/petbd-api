@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Admin\AuthClientController;
 use App\Http\Controllers\Api\Admin\AuthController;
 use App\Http\Controllers\Api\Admin\RoleController;
 use App\Http\Controllers\Api\Admin\RolePermissionController;
+use App\Http\Controllers\Api\Admin\ServicePricingController;
 use App\Http\Controllers\Api\Admin\TreeEntityController;
 use App\Http\Controllers\Api\Admin\UserController;
 use Illuminate\Support\Facades\Route;
@@ -96,6 +97,48 @@ Route::middleware(['auth:sanctum', 'ability:' . TokenAbility::ACCESS_API->value]
             Route::get('/breeds/list', [PetController::class, 'getPetBreeds']);
         });
 
+
+
+
+        // Pet Category Management Routes
+        Route::prefix('pet-categories')->group(function () {
+            Route::get('/', [App\Http\Controllers\Api\Admin\PetCategoryController::class, 'index']);
+            Route::post('/', [App\Http\Controllers\Api\Admin\PetCategoryController::class, 'store']);
+            Route::get('/{id}', [App\Http\Controllers\Api\Admin\PetCategoryController::class, 'show']);
+            Route::put('/{id}', [App\Http\Controllers\Api\Admin\PetCategoryController::class, 'update']);
+            Route::delete('/{id}', [App\Http\Controllers\Api\Admin\PetCategoryController::class, 'destroy']);
+            Route::get('/active/list', [App\Http\Controllers\Api\Admin\PetCategoryController::class, 'getActive']);
+        });
+
+        // Pet Subcategory Management Routes
+        Route::prefix('pet-subcategories')->group(function () {
+            Route::get('/', [App\Http\Controllers\Api\Admin\PetSubcategoryController::class, 'index']);
+            Route::post('/', [App\Http\Controllers\Api\Admin\PetSubcategoryController::class, 'store']);
+            Route::get('/{id}', [App\Http\Controllers\Api\Admin\PetSubcategoryController::class, 'show']);
+            Route::put('/{id}', [App\Http\Controllers\Api\Admin\PetSubcategoryController::class, 'update']);
+            Route::delete('/{id}', [App\Http\Controllers\Api\Admin\PetSubcategoryController::class, 'destroy']);
+            Route::get('/category/{categoryId}', [App\Http\Controllers\Api\Admin\PetSubcategoryController::class, 'getByCategory']);
+            Route::get('/active/list', [App\Http\Controllers\Api\Admin\PetSubcategoryController::class, 'getActive']);
+        });
+
+        // Pet Breed Management Routes
+        Route::prefix('pet-breeds')->group(function () {
+            Route::get('/', [App\Http\Controllers\Api\Admin\PetBreedController::class, 'index']);
+            Route::post('/', [App\Http\Controllers\Api\Admin\PetBreedController::class, 'store']);
+            Route::get('/{id}', [App\Http\Controllers\Api\Admin\PetBreedController::class, 'show']);
+            Route::put('/{id}', [App\Http\Controllers\Api\Admin\PetBreedController::class, 'update']);
+            Route::delete('/{id}', [App\Http\Controllers\Api\Admin\PetBreedController::class, 'destroy']);
+            Route::get('/subcategory/{subcategoryId}', [App\Http\Controllers\Api\Admin\PetBreedController::class, 'getBySubcategory']);
+            Route::get('/active/list', [App\Http\Controllers\Api\Admin\PetBreedController::class, 'getActive']);
+        });
+
+        // Pet Helper Routes (for dropdowns)
+        Route::prefix('pets')->group(function () {
+            Route::get('/categories', [App\Http\Controllers\Api\Admin\PetController::class, 'getPetCategories']);
+            Route::get('/subcategories', [App\Http\Controllers\Api\Admin\PetController::class, 'getPetSubcategories']);
+            Route::get('/breeds', [App\Http\Controllers\Api\Admin\PetController::class, 'getPetBreeds']);
+        });
+
         // Organization Management Routes
         Route::prefix('organizations')->group(function () {
             Route::get('/', [OrganizationController::class, 'index']);
@@ -128,6 +171,22 @@ Route::middleware(['auth:sanctum', 'ability:' . TokenAbility::ACCESS_API->value]
             Route::get('/{serviceId}/pricing', [ServiceController::class, 'getServicePricing']);
             Route::put('/{serviceId}/pricing', [ServiceController::class, 'updateServicePricing']);
         });
+
+        // Service Pricing Management Routes
+        Route::prefix('service-pricing')->group(function () {
+
+            Route::get('/', [ServicePricingController::class, 'index']);
+            Route::post('/', [ServicePricingController::class, 'store']);
+            Route::get('/{id}', [ServicePricingController::class, 'show']);
+            Route::put('/{id}', [ServicePricingController::class, 'update']);
+            Route::delete('/{id}', [ServicePricingController::class, 'destroy']);
+            Route::get('/service/{serviceId}', [ServicePricingController::class, 'getByService']);
+            Route::get('/service/{serviceId}/category/{categoryId}', [ServicePricingController::class, 'getByServiceAndCategory']);
+            Route::post('/bulk-update', [ServicePricingController::class, 'bulkUpdate']);
+        });
+
+
+
 
         // Appointment Management Routes
         Route::prefix('appointments')->group(function () {

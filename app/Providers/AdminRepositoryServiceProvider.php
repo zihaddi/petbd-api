@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Interfaces\Admin\AuthRepositoryInterface;
+use App\Interfaces\Admin\ServicePricingRepositoryInterface;
 use App\Repositories\Admin\AuthClientRepository as AdminAuthClientRepository;
 use App\Interfaces\Admin\AuthClientRepositoryInterface as AdminAuthClientRepositoryInterface;
 use App\Interfaces\Admin\RolePermissionRepositoryInterface;
@@ -12,15 +13,19 @@ use App\Interfaces\Admin\UserRepositoryInterface;
 use App\Repositories\Admin\AuthRepository;
 use App\Repositories\Admin\RolePermissionRepository;
 use App\Repositories\Admin\RoleRepository;
+use App\Repositories\Admin\ServicePricingRepository;
 use App\Repositories\Admin\TreeEntityRepository;
 use App\Repositories\Admin\UserRepository;
-
-
-
 
 use Illuminate\Support\ServiceProvider;
 use App\Interfaces\Admin\PetRepositoryInterface;
 use App\Repositories\Admin\PetRepository;
+use App\Interfaces\Admin\PetCategoryRepositoryInterface;
+use App\Repositories\Admin\PetCategoryRepository;
+use App\Interfaces\Admin\PetSubcategoryRepositoryInterface;
+use App\Repositories\Admin\PetSubcategoryRepository;
+use App\Interfaces\Admin\PetBreedRepositoryInterface;
+use App\Repositories\Admin\PetBreedRepository;
 use App\Interfaces\Admin\OrganizationRepositoryInterface;
 use App\Repositories\Admin\OrganizationRepository;
 use App\Interfaces\Admin\GroomerProfileRepositoryInterface;
@@ -52,6 +57,12 @@ class AdminRepositoryServiceProvider extends ServiceProvider
         $this->app->bind(GroomerProfileRepositoryInterface::class, GroomerProfileRepository::class);
         $this->app->bind(ServiceRepositoryInterface::class, ServiceRepository::class);
         $this->app->bind(AppointmentRepositoryInterface::class, AppointmentRepository::class);
+        $this->app->bind(ServicePricingRepositoryInterface::class, ServicePricingRepository::class);
+
+       // Pet Taxonomy Bindings
+        $this->app->bind(PetCategoryRepositoryInterface::class, PetCategoryRepository::class);
+        $this->app->bind(PetSubcategoryRepositoryInterface::class, PetSubcategoryRepository::class);
+        $this->app->bind(PetBreedRepositoryInterface::class, PetBreedRepository::class);
     }
 
     /**
