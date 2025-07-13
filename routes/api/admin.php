@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Admin\RoleController;
 use App\Http\Controllers\Api\Admin\RolePermissionController;
 use App\Http\Controllers\Api\Admin\ServicePricingController;
 use App\Http\Controllers\Api\Admin\TreeEntityController;
+use App\Http\Controllers\Api\Admin\DoctorProfileController;
 use App\Http\Controllers\Api\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -160,6 +161,17 @@ Route::middleware(['auth:sanctum', 'ability:' . TokenAbility::ACCESS_API->value]
             Route::get('/user/{userId}', [GroomerProfileController::class, 'getByUser']);
         });
 
+        // Doctor Profile Management Routes
+        Route::prefix('doctor-profiles')->group(function () {
+            Route::get('/', [DoctorProfileController::class, 'index']);
+            Route::post('/', [DoctorProfileController::class, 'store']);
+            Route::get('/{id}', [DoctorProfileController::class, 'show']);
+            Route::put('/{id}', [DoctorProfileController::class, 'update']);
+            Route::delete('/{id}', [DoctorProfileController::class, 'destroy']);
+            Route::get('/organization/{organizationId}', [DoctorProfileController::class, 'getByOrganization']);
+            Route::get('/user/{userId}', [DoctorProfileController::class, 'getByUser']);
+        });
+
         // Service Management Routes
         Route::prefix('services')->group(function () {
             Route::get('/', [ServiceController::class, 'index']);
@@ -197,7 +209,7 @@ Route::middleware(['auth:sanctum', 'ability:' . TokenAbility::ACCESS_API->value]
             Route::delete('/{id}', [AppointmentController::class, 'destroy']);
             Route::patch('/{id}/status', [AppointmentController::class, 'updateStatus']);
             Route::get('/pet/{petId}', [AppointmentController::class, 'getByPet']);
-            Route::get('/groomer/{groomerId}', [AppointmentController::class, 'getByGroomer']);
+            Route::get('/professional/{type}/{id}', [AppointmentController::class, 'getByProfessional']);
             Route::get('/dashboard/stats', [AppointmentController::class, 'getDashboardStats']);
         });
 });

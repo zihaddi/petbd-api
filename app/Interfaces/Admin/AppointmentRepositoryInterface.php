@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Interfaces\Admin;
 
 interface AppointmentRepositoryInterface
@@ -11,6 +12,6 @@ interface AppointmentRepositoryInterface
     public function destroy($id);
     public function updateStatus($id, $request);
     public function getByPet($petId);
-    public function getByGroomer($groomerId);
+    public function getByProfessional($type, $id); // Replace getByGroomer
     public function getDashboardStats($request);
 }

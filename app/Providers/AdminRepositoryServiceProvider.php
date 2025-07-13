@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Interfaces\Admin\AuthRepositoryInterface;
+use App\Interfaces\Admin\DoctorProfileRepositoryInterface;
 use App\Interfaces\Admin\ServicePricingRepositoryInterface;
 use App\Repositories\Admin\AuthClientRepository as AdminAuthClientRepository;
 use App\Interfaces\Admin\AuthClientRepositoryInterface as AdminAuthClientRepositoryInterface;
@@ -11,6 +12,7 @@ use App\Interfaces\Admin\RoleRepositoryInterface;
 use App\Interfaces\Admin\TreeEntityRepositoryInterface;
 use App\Interfaces\Admin\UserRepositoryInterface;
 use App\Repositories\Admin\AuthRepository;
+use App\Repositories\Admin\DoctorProfileRepository;
 use App\Repositories\Admin\RolePermissionRepository;
 use App\Repositories\Admin\RoleRepository;
 use App\Repositories\Admin\ServicePricingRepository;
@@ -58,7 +60,7 @@ class AdminRepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ServiceRepositoryInterface::class, ServiceRepository::class);
         $this->app->bind(AppointmentRepositoryInterface::class, AppointmentRepository::class);
         $this->app->bind(ServicePricingRepositoryInterface::class, ServicePricingRepository::class);
-
+        $this->app->bind(DoctorProfileRepositoryInterface::class, DoctorProfileRepository::class);
        // Pet Taxonomy Bindings
         $this->app->bind(PetCategoryRepositoryInterface::class, PetCategoryRepository::class);
         $this->app->bind(PetSubcategoryRepositoryInterface::class, PetSubcategoryRepository::class);

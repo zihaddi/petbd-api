@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -7,11 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
-class GroomerProfile extends Model
+class DoctorProfile extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'groomer_profiles';
+    protected $table = 'doctor_profiles';
 
     public function resolveRouteBinding($value, $field = null)
     {
@@ -25,6 +26,7 @@ class GroomerProfile extends Model
         'experience_years',
         'hourly_rate',
         'bio',
+        'medical_license_number',
         'status',
         'joined_at',
         'created_by',
@@ -51,7 +53,7 @@ class GroomerProfile extends Model
 
     public function appointments()
     {
-        return $this->morphMany(Appointment::class , 'professional');
+        return $this->morphMany(Appointment::class, 'professional');
     }
 
     public function createdBy()

@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -20,7 +21,8 @@ class Appointment extends Model
 
     protected $fillable = [
         'pet_id',
-        'groomer_profile_id',
+        'professional_id',
+        'professional_type',
         'service_id',
         'scheduled_datetime',
         'duration_minutes',
@@ -30,7 +32,7 @@ class Appointment extends Model
         'additional_fees',
         'total_cost',
         'customer_notes',
-        'groomer_notes',
+        'professional_notes',
         'cancellation_reason',
         'booked_at',
         'confirmed_at',
@@ -43,7 +45,7 @@ class Appointment extends Model
 
     protected $casts = [
         'pet_id' => 'integer',
-        'groomer_profile_id' => 'integer',
+        'professional_id' => 'integer',
         'service_id' => 'integer',
         'scheduled_datetime' => 'datetime',
         'duration_minutes' => 'integer',
@@ -57,14 +59,17 @@ class Appointment extends Model
         'cancelled_at' => 'datetime',
     ];
 
+    /**
+     * Get the professional (groomer/doctor/nurse) that owns the appointment.
+     */
+    public function professional()
+    {
+        return $this->morphTo();
+    }
+
     public function pet()
     {
         return $this->belongsTo(Pet::class);
-    }
-
-    public function groomerProfile()
-    {
-        return $this->belongsTo(GroomerProfile::class);
     }
 
     public function service()
@@ -87,19 +92,30 @@ class Appointment extends Model
         $query->when($filters['search'] ?? null, function ($query, $search) {
             $query->whereHas('pet', function ($q) use ($search) {
                 $q->where('name', 'like', '%' . $search . '%');
-            })->orWhereHas('groomerProfile.user', function ($q) use ($search) {
-                $q->where('full_name', 'like', '%' . $search . '%');
+            })->orWhereHas('professional', function ($q) use ($search) {
+                // Search in the professional's user relationship
+                $q->when(method_exists($q->getModel(), 'user'), function ($q) use ($search) {
+                    $q->whereHas('user', function ($userQuery) use ($search) {
+                        $userQuery->where('full_name', 'like', '%' . $search . '%');
+                    });
+                });
             });
         })->when($filters['pet_id'] ?? null, function ($query, $petId) {
             $query->where('pet_id', $petId);
-        })->when($filters['groomer_profile_id'] ?? null, function ($query, $groomerId) {
-            $query->where('groomer_profile_id', $groomerId);
+        })->when($filters['professional_id'] ?? null, function ($query, $professionalId) {
+            $query->where('professional_id', $professionalId);
+        })->when($filters['professional_type'] ?? null, function ($query, $professionalType) {
+            $query->where('professional_type', $professionalType);
         })->when($filters['status'] ?? null, function ($query, $status) {
             $query->where('status', $status);
         })->when($filters['date_from'] ?? null, function ($query, $dateFrom) {
             $query->where('scheduled_datetime', '>=', $dateFrom);
         })->when($filters['date_to'] ?? null, function ($query, $dateTo) {
             $query->where('scheduled_datetime', '<=', $dateTo);
+        })->when($filters['location_type'] ?? null, function ($query, $locationType) {
+            $query->where('location_type', $locationType);
+        })->when($filters['service_id'] ?? null, function ($query, $serviceId) {
+            $query->where('service_id', $serviceId);
         });
     }
 

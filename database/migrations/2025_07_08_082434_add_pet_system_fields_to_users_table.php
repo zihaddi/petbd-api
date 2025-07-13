@@ -10,10 +10,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->enum('pet_user_type', ['pet_owner', 'groomer', 'both'])->nullable()->after('user_type');
-            $table->string('full_name')->nullable()->after('email');
-            $table->string('address')->nullable()->after('photo');
-            $table->boolean('email_notification')->default(1)->after('email_verified_at');
+            // $table->enum('pet_user_type', ['pet_owner', 'groomer', 'both'])->nullable()->after('user_type');
+            // $table->string('full_name')->nullable()->after('email');
+            // $table->string('address')->nullable()->after('photo');
+            // $table->boolean('email_notification')->default(1)->after('email_verified_at');
         });
     }
 

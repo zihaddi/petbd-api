@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
@@ -53,9 +54,9 @@ class AppointmentController extends Controller
         return $this->client->getByPet($petId);
     }
 
-    public function getByGroomer($groomerId): JsonResponse
+    public function getByProfessional($type, $id): JsonResponse
     {
-        return $this->client->getByGroomer($groomerId);
+        return $this->client->getByProfessional($type, $id);
     }
 
     public function getDashboardStats(Request $request): JsonResponse

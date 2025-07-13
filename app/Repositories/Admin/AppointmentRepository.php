@@ -13,12 +13,10 @@ class AppointmentRepository implements AppointmentRepositoryInterface
 {
     public function index($request)
     {
-
         try {
             $query = Appointment::with([
                 'pet.owner',
-                'groomerProfile.user',
-                'groomerProfile.organization',
+                'professional',
                 'service'
             ])->filter($request->all());
 
@@ -62,7 +60,8 @@ class AppointmentRepository implements AppointmentRepositoryInterface
 
             $appointmentData = $request->only([
                 'pet_id',
-                'groomer_profile_id',
+                'professional_id',
+                'professional_type',
                 'service_id',
                 'scheduled_datetime',
                 'duration_minutes',
@@ -83,8 +82,7 @@ class AppointmentRepository implements AppointmentRepositoryInterface
                 'message' => 'Appointment created successfully',
                 'data' => $appointment->load([
                     'pet.owner',
-                    'groomerProfile.user',
-                    'groomerProfile.organization',
+                    'professional',
                     'service'
                 ])
             ]);
@@ -103,8 +101,7 @@ class AppointmentRepository implements AppointmentRepositoryInterface
         try {
             $appointment = Appointment::with([
                 'pet.owner',
-                'groomerProfile.user',
-                'groomerProfile.organization',
+                'professional',
                 'service'
             ])->findOrFail($id);
 
@@ -133,7 +130,7 @@ class AppointmentRepository implements AppointmentRepositoryInterface
                 'duration_minutes',
                 'location_type',
                 'customer_notes',
-                'groomer_notes'
+                'professional_notes'
             ]);
 
             // If location type changes, update pricing
@@ -157,8 +154,7 @@ class AppointmentRepository implements AppointmentRepositoryInterface
                 'message' => 'Appointment updated successfully',
                 'data' => $appointment->load([
                     'pet.owner',
-                    'groomerProfile.user',
-                    'groomerProfile.organization',
+                    'professional',
                     'service'
                 ])
             ]);
@@ -245,8 +241,7 @@ class AppointmentRepository implements AppointmentRepositoryInterface
     {
         try {
             $appointments = Appointment::with([
-                'groomerProfile.user',
-                'groomerProfile.organization',
+                'professional',
                 'service'
             ])
             ->where('pet_id', $petId)
@@ -267,26 +262,27 @@ class AppointmentRepository implements AppointmentRepositoryInterface
         }
     }
 
-    public function getByGroomer($groomerId)
+    public function getByProfessional($type, $id)
     {
         try {
             $appointments = Appointment::with([
                 'pet.owner',
                 'service'
             ])
-            ->where('groomer_profile_id', $groomerId)
+            ->where('professional_type', $type)
+            ->where('professional_id', $id)
             ->orderBy('scheduled_datetime', 'desc')
             ->get();
 
             return response()->json([
                 'status' => true,
-                'message' => 'Groomer appointments retrieved successfully',
+                'message' => ucfirst($type) . ' appointments retrieved successfully',
                 'data' => $appointments
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
-                'message' => 'Error retrieving groomer appointments: ' . $e->getMessage(),
+                'message' => 'Error retrieving professional appointments: ' . $e->getMessage(),
                 'data' => null
             ], 500);
         }

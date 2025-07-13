@@ -12,7 +12,11 @@ return new class extends Migration
         Schema::create('appointments', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('pet_id');
-            $table->unsignedInteger('groomer_profile_id');
+
+            // Replace morphs() with manual columns to control index names
+            $table->unsignedInteger('professional_id');
+            $table->string('professional_type', 30); // Added length limit
+
             $table->unsignedInteger('service_id');
             $table->datetime('scheduled_datetime');
             $table->integer('duration_minutes');
@@ -26,7 +30,7 @@ return new class extends Migration
 
             // Additional information
             $table->text('customer_notes')->nullable();
-            $table->text('groomer_notes')->nullable();
+            $table->text('professional_notes')->nullable();
             $table->text('cancellation_reason')->nullable();
 
             // Timestamps
@@ -39,17 +43,17 @@ return new class extends Migration
             $table->unsignedInteger('modified_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
-        });
 
-        Schema::table('appointments', function (Blueprint $table) {
+            // Foreign keys inside create() is also valid
             $table->foreign('pet_id')->references('id')->on('pets')->onDelete('restrict')->onUpdate('cascade');
-            $table->foreign('groomer_profile_id')->references('id')->on('groomer_profiles')->onDelete('restrict')->onUpdate('cascade');
             $table->foreign('service_id')->references('id')->on('services')->onDelete('restrict')->onUpdate('cascade');
             $table->foreign('created_by')->references('id')->on('users')->onDelete('set null')->onUpdate('cascade');
             $table->foreign('modified_by')->references('id')->on('users')->onDelete('set null')->onUpdate('cascade');
-            $table->index(['pet_id', 'status']);
-            $table->index(['groomer_profile_id', 'scheduled_datetime']);
-            $table->index(['scheduled_datetime', 'status']);
+
+            // Custom-named indexes to avoid length issues
+            $table->index(['pet_id', 'status'], 'idx_appt_pet_status');
+            $table->index(['professional_id', 'professional_type', 'scheduled_datetime'], 'idx_appt_prof_time');
+            $table->index(['scheduled_datetime', 'status'], 'idx_appt_datetime_status');
         });
     }
 
